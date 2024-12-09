@@ -1,0 +1,87 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Model.InquiryModel" %>
+<%@ page import="Model.AddUserModel" %>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="Services.InquiryService" %>
+<% 
+    // Fetch the logged-in user's details from the session
+    HttpSession session = request.getSession();
+    AddUserModel loggedInUser = (AddUserModel) session.getAttribute("loggedInUser");
+
+    if (loggedInUser == null) {
+        // If no user is logged in, redirect to login page
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
+    // Fetch inquiries from the service and set it in the request
+    InquiryService inquiryService = new InquiryService();
+    List<InquiryModel> inquiries = inquiryService.getAllInquiries(); // Fetch all inquiries
+    request.setAttribute("inquiries", inquiries);
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inquiries</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <h1>Inquiries</h1>
+
+    <form action="AddInquiry" method="post">
+        <label for="username">Username:</label>
+        <input type="text" name="username" value="<%= loggedInUser.getUsername() %>" readonly required>
+        <br>
+        <label for="inquiry">Your Inquiry:</label>
+        <textarea name="inquiry" required></textarea>
+        <br>
+        <input type="submit" value="Submit Inquiry">
+    </form>
+
+    <h2>All Inquiries:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Inquiry</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%
+                List<InquiryModel> inquiries = (List<InquiryModel>) request.getAttribute("inquiries");
+                if (inquiries != null && !inquiries.isEmpty()) {
+                    for (InquiryModel inquiry : inquiries) {
+            %>
+            <tr>
+                <td><%= inquiry.getUsername() %></td>
+                <td><%= inquiry.getInquiry() %></td>
+                <td>
+                    <form action="EditInquiry" method="get" style="display:inline;">
+                        <input type="hidden" name="IqId" value="<%= inquiry.getInqID() %>">
+                        <input type="hidden" name="inquiry" value="<%= inquiry.getInquiry() %>">
+                        <input type="hidden" name="username" value="<%= inquiry.getUsername() %>">
+                        <input type="submit" value="Edit">
+                    </form>
+                    <form action="DeleteInquiry" method="post" style="display:inline;">
+                        <input type="hidden" name="IqId" value="<%= inquiry.getInqID() %>">
+                        <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this inquiry?');">
+                    </form>
+                </td>
+            </tr>
+            <%
+                    }
+                } else {
+            %>
+            <tr>
+                <td colspan="3">No inquiries found.</td>
+            </tr>
+            <%
+                }
+            %>
+        </tbody>
+    </table>
+</body>
+</html>

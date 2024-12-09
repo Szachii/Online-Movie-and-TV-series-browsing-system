@@ -1,0 +1,141 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to ReelVibe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            color: #fff;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative; /* Added for positioning the pseudo-element */
+            overflow: hidden; /* Prevents scrollbars due to pseudo-element */
+        }
+        /* Background image and blur effect */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('path/to/your/background-image.jpg'); /* Change the path to your image */
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px); /* Adjust blur level as needed */
+            z-index: -1; /* Ensures the background is behind other content */
+        }
+        .welcome_nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: rgba(44, 44, 44, 0.8); /* Added transparency */
+        }
+        .welcome_nav h1 {
+            font-size: 28px;
+            color: #ff6f61;
+        }
+        .welcome_nav_list {
+            list-style: none;
+            display: flex;
+        }
+        .welcome_nav_list li {
+            margin-left: 20px;
+        }
+        .welcome_nav_list a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .welcome_nav_list a:hover {
+            color: #ff6f61;
+        }
+        .welcome_content {
+            padding: 50px 5%;
+            background-color: rgba(18, 18, 18, 0.8); /* Added transparency */
+            text-align: center;
+            flex: 1;
+        }
+        .welcome_content h2 {
+            margin-bottom: 30px;
+            font-size: 28px;
+            color: #ff6f61;
+        }
+        .welcome_content p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .welcome_buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .welcome_buttons a {
+            background-color: #ff6f61;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .welcome_buttons a:hover {
+            background-color: #e65c50;
+        }
+        footer {
+            background-color: #2c2c2c;
+            text-align: center;
+            padding: 20px 0;
+            color: #fff;
+            margin-top: auto;
+        }
+        .social_links {
+            margin-top: 10px;
+        }
+        .social_links a {
+            color: #ff6f61;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="welcome_nav">
+        <h1>ReelVibe</h1>
+        <ul class="welcome_nav_list">
+            <li><a href="faq.jsp">FAQ</a></li>
+            <li><a href="about.jsp">About Us</a></li>
+            <li><a href="contact.jsp">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="welcome_content">
+        <h2>Welcome to ReelVibe</h2>
+        <p>Your ultimate destination for browsing movies and TV series. Discover trending titles, top-rated content, and explore by genres. Join us and dive into the world of entertainment!</p>
+        <div class="welcome_buttons">
+            <a href="login.jsp">Login</a>
+            <a href="register.jsp">Register</a>
+        </div>
+    </div>
+    <footer>
+        <p>© 2024 ReelVibe - Your Movie & TV Series Destination</p>
+        <div class="social_links">
+            <a href="https://www.facebook.com" target="_blank">Facebook</a>
+            <a href="https://www.twitter.com" target="_blank">Twitter</a>
+            <a href="https://www.instagram.com" target="_blank">Instagram</a>
+        </div>
+    </footer>
+</body>
+</html>

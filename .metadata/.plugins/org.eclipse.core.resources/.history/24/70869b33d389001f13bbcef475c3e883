@@ -1,0 +1,44 @@
+package Servlet;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import Services.CommentService;
+import Model.AddUserModel;
+
+@WebServlet("/AddCommentServlet")
+public class AddCommentServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Fetch logged-in user's details
+        AddUserModel loggedInUser = (AddUserModel) request.getSession().getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        // Fetch movie name and comment
+        String movieName = request.getParameter("movieName");
+        String comment = request.getParameter("comment");
+        String userId = loggedInUser.getUsername();
+
+        // Add comment
+        CommentService commentService = new CommentService();
+        try {
+			commentService.addComment(movieName, comment, userId);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        // Redirect back to the movie page
+        response.sendRedirect("ViewMovieServlet?title=" + movieName);
+    }
+}

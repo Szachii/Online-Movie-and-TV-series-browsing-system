@@ -1,0 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>Register</h1>
+        <form action="UpdateUserServlet" method="post" onsubmit="return validateForm()">
+        	<input type="text" name="username" placeholder="Username" required>
+            <input type="text" name="nwname" placeholder="New Name" required>
+            <input type="text" name="nwusername" placeholder="New Username" required>
+            <input type="date" name="nwdob" placeholder="New Date of Birth" required>
+            <input type="password" id="nwpassword" name="password" placeholder="New Password" required>
+            <input type="password" id="repassword" name="Newrepassword" placeholder="Re-enter New Password" required>
+            <button type="submit">Register</button>
+            <p id="error-message" class="error-message">Passwords do not match!</p>
+        </form>
+</body>
+</html>

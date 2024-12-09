@@ -1,0 +1,108 @@
+package Services;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import Controller.DBConnect;
+import Model.InquiryModel;
+import Model.QADeleteModel;
+
+public class InquiryService {
+
+	public void insertInquiry(InquiryModel IqMod) {
+		try {
+			String username = IqMod.getUsername();
+			// int id = IqMod.getInqID();
+			String inq = IqMod.getInquiry();
+
+			DBConnect db = new DBConnect();
+
+			String sql = "INSERT INTO inquiry (username,inquiry) VALUES (?, ?)";
+
+			PreparedStatement pstmt = db.getConnection().prepareStatement(sql);
+
+			// pstmt.setInt(1, id);
+			pstmt.setString(1, username);
+			pstmt.setString(2, inq);
+
+			pstmt.executeUpdate();
+
+			pstmt.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void UpdateInquiry(InquiryModel IqMod) {
+		try {
+			String username = IqMod.getUsername();
+			int id = IqMod.getInqID();
+			String inq = IqMod.getInquiry();
+
+			DBConnect db = new DBConnect();
+
+			String sql = "UPDATE faq1  SET username = ?, inquiry = ?  WHERE  id = ?";
+
+			PreparedStatement pstmt = db.getConnection().prepareStatement(sql);
+
+			pstmt.setString(1, username);
+			pstmt.setString(2, inq);
+			pstmt.setInt(3, id);
+
+			pstmt.executeUpdate();
+
+			pstmt.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteData(InquiryModel IqMod) {
+		try {
+
+			int id = IqMod.getInqID();
+
+			DBConnect db = new DBConnect();
+
+			String sql = "DELETE FROM inquiry WHERE id = ?";
+			PreparedStatement pstmt = db.getConnection().prepareStatement(sql);
+			pstmt.setInt(1, id);
+
+			pstmt.executeUpdate();
+
+			pstmt.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public List<InquiryModel> getAllInquiries() {
+        List<InquiryModel> inquiries = new ArrayList<>();
+        try {
+            Connection conn = DBConnect.getConnection();
+            String sql = "SELECT * FROM inquiry";  // Adjust table name as needed
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                InquiryModel inquiry = new InquiryModel();
+                inquiry.setInqID(rs.getInt("id"));  // Assuming id is the primary key
+                inquiry.setUsername(rs.getString("username"));
+                inquiry.setInquiry(rs.getString("inquiry"));
+                inquiries.add(inquiry);
+            }
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return inquiries;
+    }
+
+}

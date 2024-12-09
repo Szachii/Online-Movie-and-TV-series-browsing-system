@@ -1,0 +1,65 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="Model.InquiryModel" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Inquiry Page</title>
+    <style>
+        /* Your CSS styles */
+    </style>
+</head>
+<body>
+
+<h1>Inquiry Page</h1>
+
+<!-- Inquiry Form -->
+<form action="AddInquiry" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" value="${sessionScope.username}" readonly><br><br>
+    
+    <label for="inquiry">Inquiry:</label>
+    <textarea id="inquiry" name="inquiry"></textarea><br><br>
+    
+    <input type="submit" value="Submit Inquiry">
+</form>
+
+<hr>
+
+<!-- Display Inquiries -->
+<h2>Existing Inquiries</h2>
+<c:if test="${not empty inquiries}">
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Inquiry</th>
+            <th>Actions</th>
+        </tr>
+        <c:forEach var="inquiry" items="${inquiries}">
+            <tr>
+                <td>${inquiry.inqID}</td>
+                <td>${inquiry.username}</td>
+                <td>${inquiry.inquiry}</td>
+                <td>
+                    <form action="DeleteInquiry" method="post" style="display:inline;">
+                        <input type="hidden" name="inquiryId" value="${inquiry.inqID}">
+                        <input type="submit" value="Delete">
+                    </form>
+                    <form action="EditInquiry" method="get" style="display:inline;">
+                        <input type="hidden" name="inquiryId" value="${inquiry.inqID}">
+                        <input type="submit" value="Edit">
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>
+<c:if test="${empty inquiries}">
+    <p>No inquiries found.</p>
+</c:if>
+
+</body>
+</html>

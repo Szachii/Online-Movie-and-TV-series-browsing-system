@@ -1,0 +1,116 @@
+package Services;
+
+import java.sql.*;
+import java.util.ArrayList;
+import Model.CommentModel;
+import Controller.DBConnect;
+
+public class CommentService {
+
+    // Add a new comment
+	public void addComment(String userId, String movieName, String commentText) throws ClassNotFoundException, SQLException {
+        Connection connection = DBConnect.getConnection();
+
+        String query = "INSERT INTO comments (userId, movieName, comment) VALUES (?, ?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, userId);
+        preparedStatement.setString(2, movieName);
+        preparedStatement.setString(3, commentText);
+
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+        connection.close();
+    }
+
+    // Retrieve all comments for a specific movie
+	public ArrayList<CommentModel> getCommentsByMovie(String movieName) throws ClassNotFoundException, SQLException {
+        ArrayList<CommentModel> comments = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+
+        try {
+            connection = DBConnect.getConnection();
+            String query = "SELECT * FROM comments WHERE movieName = ?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, movieName);
+            
+            rs = preparedStatement.executeQuery();
+
+            // Loop through the result set and create CommentModel objects
+            while (rs != null && rs.next()) {
+                CommentModel comment = new CommentModel();
+                comment.setCommentId(rs.getInt("commentId"));
+                comment.setUserId(rs.getInt("userId"));
+                comment.setMovieName(rs.getString("movieName"));
+                comment.setComment(rs.getString("comment"));
+                comments.add(comment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  // Log the error for debugging
+        } finally {
+            // Ensure result set and statement are closed if they were initialized
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return comments;
+    }
+
+
+    // Update a comment by ID
+    public void updateComment(int commentId, String newComment) throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DBConnect.getConnection();
+            String query = "UPDATE comments SET comment = ? WHERE comment_id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, newComment);
+            pstmt.setInt(2, commentId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        pstmt.close();
+        
+        conn.close();
+    }
+
+    // Delete a comment by ID
+    public void deleteComment(int commentId) throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DBConnect.getConnection();
+            String query = "DELETE FROM comments WHERE comment_id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, commentId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        pstmt.close();
+        
+        conn.close();
+    }
+}

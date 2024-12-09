@@ -1,0 +1,33 @@
+package Servlet;
+
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import Model.InquiryModel;
+import Services.InquiryService;
+
+@WebServlet("/ShowInquiryServlet")
+public class InquiryServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        // Call the service method to get the list of inquiries
+        InquiryService inquiryService = new InquiryService();
+        List<InquiryModel> inquiries = inquiryService.showInquiry();
+
+        // Set the inquiries as a request attribute to pass to the JSP
+        request.setAttribute("inquiries", inquiries);
+
+        // Forward the request to the inquiry page
+        RequestDispatcher dispatcher = request.getRequestDispatcher("inquiry.jsp");
+        dispatcher.forward(request, response);
+    }
+}

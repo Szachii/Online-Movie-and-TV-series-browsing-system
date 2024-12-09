@@ -1,0 +1,203 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="Model.InquiryModel" %>
+    
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Inquiry Page</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Styles */
+        .inquiry-form {
+            margin-bottom: 40px;
+        }
+
+        .inquiry-form label {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .inquiry-form input,
+        .inquiry-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .inquiry-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #374785;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .inquiry-form button:hover {
+            background-color: #2c3e50;
+        }
+
+        /* Inquiry List Styles */
+        .inquiry-list {
+            margin-top: 40px;
+        }
+
+        .inquiry-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .inquiry-details {
+            max-width: 70%;
+        }
+
+        .inquiry-details p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .inquiry-buttons button {
+            padding: 10px 15px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .edit-btn {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background-color: #138496;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Inquiry Page</h1>
+
+    <div class="container">
+
+        <!-- Inquiry Form at the Top -->
+        <div class="inquiry-form">
+            <h2 id="formTitle">Add New Inquiry</h2>
+            <form id="inquiryForm" action="AddInquiry" method="post">
+
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" required>
+
+                <label for="inquiryDescription">Inquiry Description:</label>
+                <textarea id="inquiryDescription" name="inquiry" rows="5" placeholder="Enter inquiry details" required></textarea>
+
+                <button type="submit" id="submitBtn">Add Inquiry</button>
+            </form>
+        </div>
+
+        <!-- Inquiry List Below the Form -->
+        <div class="inquiry-list">
+            <h2>Existing Inquiries</h2>
+            <div id="inquiryList">
+                <!-- Display inquiries dynamically fetched from the database -->
+                <%
+                    List<InquiryModel> inquiryList = (List<InquiryModel>) request.getAttribute("inquiries");
+                    if (inquiryList != null) {
+                        for (InquiryModel inquiry : inquiryList) {
+                %>
+                            <div class="inquiry-item">
+                                <div class="inquiry-details">
+                                    <p><strong>ID:</strong> <%= inquiry.getInqID() %></p>
+                                    <p><strong>Username:</strong> <%= inquiry.getUsername() %></p>
+                                    <p><strong>Inquiry:</strong> <%= inquiry.getInquiry() %></p>
+                                </div>
+                                <div class="inquiry-buttons">
+                                    <button class="edit-btn" onclick="editInquiry(<%= inquiry.getInqID() %>)">Edit</button>
+                                    <form action="DeleteInquiry" method="post" style="display:inline;">
+                                        <input type="hidden" name="inquiryId" value="<%= inquiry.getInqID() %>">
+                                        <button class="delete-btn" type="submit">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                <%
+                        }
+                    } else {
+                %>
+                        <p>No inquiries found.</p>
+                <%
+                    }
+                %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function editInquiry(id) {
+            // Logic to edit inquiry
+            window.location.href = 'EditInquiry?id=' + id;
+        }
+    </script>
+
+</body>
+
+</html>

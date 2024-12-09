@@ -1,0 +1,95 @@
+package Services;
+
+import java.sql.*;
+import java.util.ArrayList;
+import Model.CommentModel;
+import Controller.DBConnect;
+
+public class CommentService {
+
+    // Add a new comment
+    public void addComment(String movieName, String comment, String userId) throws ClassNotFoundException, SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DBConnect.getConnection();
+            String query = "INSERT INTO comments (movie_name, comment, user_id) VALUES (?, ?, ?)";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, movieName);
+            pstmt.setString(2, comment);
+            pstmt.setString(3, userId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        pstmt.close();
+    }
+
+    // Retrieve all comments for a specific movie
+    public ArrayList<CommentModel> getCommentsByMovie(String movieName) throws ClassNotFoundException, SQLException {
+        ArrayList<CommentModel> comments = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DBConnect.getConnection();
+            String query = "SELECT * FROM comments WHERE movie_name = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, movieName);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CommentModel comment = new CommentModel(
+                        rs.getInt("comment_id"),
+                        rs.getString("movie_name"),
+                        rs.getString("comment"),
+                        rs.getString("user_id")
+                );
+                comments.add(comment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        pstmt.close();
+        rs.close();
+        conn.close();
+        
+        return comments;
+    }
+
+    // Update a comment by ID
+    public void updateComment(int commentId, String newComment) throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DBConnect.getConnection();
+            String query = "UPDATE comments SET comment = ? WHERE comment_id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, newComment);
+            pstmt.setInt(2, commentId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        pstmt.close();
+        
+        conn.close();
+    }
+
+    // Delete a comment by ID
+    public void deleteComment(int commentId) throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DBConnect.getConnection();
+            String query = "DELETE FROM comments WHERE comment_id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, commentId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        pstmt.close();
+        
+        conn.close();
+    }
+}

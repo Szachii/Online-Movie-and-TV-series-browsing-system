@@ -1,0 +1,29 @@
+package Servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import Services.InquiryService;
+import Model.InquiryModel;
+
+@WebServlet("/DeleteInquiry")
+public class DeleteInquiryServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Get the inquiry ID from the request
+        int inquiryId = Integer.parseInt(request.getParameter("IqId"));
+        
+        // Create an instance of InquiryModel
+        InquiryModel inquiryModel = new InquiryModel();
+        inquiryModel.setInqID(inquiryId); // Set the inquiry ID to be deleted
+
+        // Create an instance of InquiryService to handle the deletion
+        InquiryService inquiryService = new InquiryService();
+        inquiryService.deleteData(inquiryModel); // Call the delete method
+
+        // After deletion, redirect to the inquiry page to refresh the inquiries list
+        response.sendRedirect("inquiry.jsp");
+    }
+}
